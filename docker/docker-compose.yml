@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+  php:
+    build:
+      context: ./dockerfile/php
+      dockerfile: php72-fpm
+    image: php72-fpm
+    container_name: php72
+    volumes:
+      - ../www:/usr/share/nginx/html
+    ports:
+      - "9000:9000"
+
+  nginx:
+    image: nginx:1.18.0
+    container_name: nginx
+    volumes:
+      - ../www:/usr/share/nginx/html
+      - ./conf/nginx/conf.d:/etc/nginx/conf.d/
+    links:
+      - php
+    ports:
+      - "80:80"
+    depends_on:
+      - php
